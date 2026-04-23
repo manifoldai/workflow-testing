@@ -1,0 +1,267 @@
+version 1.0
+
+import "../../tasks/quality_control/basic_statistics/task_fastq_scan.wdl" as fastq_scan
+import "../../tasks/quality_control/basic_statistics/task_fastqc.wdl" as fastqc_task
+import "../../tasks/quality_control/basic_statistics/task_readlength.wdl" as readlength_task
+import "../../tasks/quality_control/read_filtering/task_bbduk.wdl" as bbduk_task
+import "../../tasks/quality_control/read_filtering/task_fastp.wdl" as fastp_task
+import "../../tasks/quality_control/read_filtering/task_ncbi_scrub.wdl" as ncbi_scrub
+import "../../tasks/quality_control/read_filtering/task_trimmomatic.wdl" as trimmomatic_task
+import "../../tasks/taxon_id/contamination/task_kraken2.wdl" as kraken
+import "../../tasks/taxon_id/contamination/task_midas.wdl" as midas_task
+import "../../tasks/utilities/file_handling/task_cat_lanes.wdl" as cat_lanes
+
+workflow read_QC_trim_pe {
+  meta {
+    description: "Runs basic QC (fastq-scan), trimming (trimmomatic), and taxonomic ID (Kraken2) on illumina PE reads"
+  }
+  input {
+    String samplename
+    File read1
+    File read2
+    Int trim_min_length = 75
+    Int trim_quality_min_score = 30
+    Int trim_window_size = 4
+    Int bbduk_memory = 8
+    Boolean call_midas = false
+    File? midas_db
+    Boolean call_kraken = false
+    Int? kraken_disk_size
+    Int? kraken_memory
+    Int? kraken_cpu
+    File? kraken_db
+    String? target_organism
+    File? adapters
+    File? phix
+    String? workflow_series
+    String read_processing = "trimmomatic" # options: trimmomatic, fastp
+    String read_qc = "fastq_scan" # options: fastq_scan, fastqc
+    String? trimmomatic_override_args
+    String fastp_args = "--detect_adapter_for_pe -g -5 20 -3 20"
+    String? fastqc_docker_image
+    String? fastq_scan_docker_image
+    String? trimmomatic_docker_image
+    String? fastp_docker_image
+    String? bbduk_docker_image
+    String? kraken2_docker_image
+    String? ncbi_scrub_docker_image
+    String? midas_docker_image
+    String? readlength_docker_image
+  }
+  if (read_qc == "fastqc") {
+    call fastqc_task.fastqc as fastqc_raw {
+      input:
+        read1 = read1,
+        read2 = read2,
+        docker = select_first([fastqc_docker_image, "us-docker.pkg.dev/general-theiagen/staphb/fastqc:0.12.1"])
+    }
+  }
+  if (read_qc == "fastq_scan") {
+    call fastq_scan.fastq_scan_pe as fastq_scan_raw {
+      input:
+        read1 = read1,
+        read2 = read2,
+        docker = select_first([fastq_scan_docker_image, "us-docker.pkg.dev/general-theiagen/biocontainers/fastq-scan:1.0.1--h4ac6f70_3"])
+    }
+  }
+  if (("~{workflow_series}" == "theiacov") || ("~{workflow_series}" == "theiameta")) {
+    call ncbi_scrub.ncbi_scrub_pe {
+      input:
+        samplename = samplename,
+        read1 = read1,
+        read2 = read2,
+        docker = select_first([ncbi_scrub_docker_image, "us-docker.pkg.dev/general-theiagen/ncbi/sra-human-scrubber:2.2.1"])
+    }
+  }
+  if ("~{workflow_series}" == "theiacov") {
+    call kraken.kraken2_theiacov as kraken2_theiacov_raw {
+      input:
+        samplename = samplename,
+        read1 = read1,
+        read2 = read2,
+        target_organism = target_organism,
+        kraken2_db = kraken_db,
+        disk_size = kraken_disk_size,
+        memory = kraken_memory,
+        cpu = kraken_cpu,
+        docker_image = select_first([kraken2_docker_image, "us-docker.pkg.dev/general-theiagen/staphb/kraken2:2.1.2-no-db"])
+    }
+    call kraken.kraken2_theiacov as kraken2_theiacov_dehosted {
+      input:
+        samplename = samplename,
+        read1 = select_first([ncbi_scrub_pe.read1_dehosted]),
+        read2 = ncbi_scrub_pe.read2_dehosted,
+        target_organism = target_organism,
+        kraken2_db = kraken_db,
+        disk_size = kraken_disk_size,
+        memory = kraken_memory,
+        cpu = kraken_cpu,
+        docker_image = select_first([kraken2_docker_image, "us-docker.pkg.dev/general-theiagen/staphb/kraken2:2.1.2-no-db"])
+    }
+  }
+  if (read_processing == "trimmomatic") {
+    call trimmomatic_task.trimmomatic {
+      input:
+        samplename = samplename,
+        read1 = select_first([ncbi_scrub_pe.read1_dehosted, read1]),
+        read2 = select_first([ncbi_scrub_pe.read2_dehosted, read2]),
+        trimmomatic_window_size = trim_window_size,
+        trimmomatic_window_quality = trim_quality_min_score,
+        trimmomatic_min_length = trim_min_length,
+        trimmomatic_override_args = trimmomatic_override_args,
+        docker = select_first([trimmomatic_docker_image, "us-docker.pkg.dev/general-theiagen/staphb/trimmomatic:0.40"])
+    }
+  }
+  if (read_processing == "fastp") {
+    call fastp_task.fastp_pe as fastp {
+      input:
+        samplename = samplename,
+        read1 = select_first([ncbi_scrub_pe.read1_dehosted, read1]),
+        read2 = select_first([ncbi_scrub_pe.read2_dehosted, read2]),
+        fastp_window_size = trim_window_size,
+        fastp_quality_trim_score = trim_quality_min_score,
+        fastp_min_length = trim_min_length,
+        fastp_args = fastp_args,
+        docker = select_first([fastp_docker_image, "us-docker.pkg.dev/general-theiagen/staphb/fastp:0.23.2"])
+    }
+  }
+  call bbduk_task.bbduk {
+    input:
+      samplename = samplename,
+      read1 = select_first([trimmomatic.read1_trimmed, fastp.read1_trimmed]),
+      read2 = select_first([trimmomatic.read2_trimmed, fastp.read2_trimmed]),
+      memory = bbduk_memory,
+      adapters_fasta = adapters,
+      phix_fasta = phix,
+      docker = select_first([bbduk_docker_image, "us-docker.pkg.dev/general-theiagen/theiagen/bbtools:39.38_python"])
+  }
+  if ("~{workflow_series}" == "theiaprok" || "~{workflow_series}" == "theiameta") {
+    if (call_midas) {
+      call midas_task.midas {
+        input:
+          samplename = samplename,
+          read1 = read1,
+          read2 = read2,
+          midas_db = midas_db,
+          docker = select_first([midas_docker_image, "us-docker.pkg.dev/general-theiagen/fhcrc-microbiome/midas:v1.3.2--6"])
+      }
+    }
+  }
+  if ("~{workflow_series}" == "theiaprok" || "~{workflow_series}" == "theiaeuk") {
+    if ((call_kraken) && defined(kraken_db)) {
+      call kraken.kraken2_standalone as kraken2_standalone_theiaprok {
+        input:
+          samplename = samplename,
+          read1 = read1,
+          read2 = read2,
+          kraken2_db = select_first([kraken_db]),
+          disk_size = kraken_disk_size,
+          memory = kraken_memory,
+          cpu = kraken_cpu,
+          docker = select_first([kraken2_docker_image, "us-docker.pkg.dev/general-theiagen/staphb/kraken2:2.1.2-no-db"])
+      }
+    }  
+    if ((call_kraken) && ! defined(kraken_db)) {
+      String kraken_db_warning = "Kraken database not defined"
+    }
+  }
+  if ("~{workflow_series}" == "theiameta") {
+    call readlength_task.readlength {
+      input:
+        read1 = bbduk.read1_clean,
+        read2 = bbduk.read2_clean,
+        docker = select_first([readlength_docker_image, "us-docker.pkg.dev/general-theiagen/staphb/bbtools:38.76"])
+    }
+  }
+  if (read_qc == "fastqc") {
+    call fastqc_task.fastqc as fastqc_clean {
+      input:
+        read1 = bbduk.read1_clean,
+        read2 = bbduk.read2_clean,
+        docker = select_first([fastqc_docker_image, "us-docker.pkg.dev/general-theiagen/staphb/fastqc:0.12.1"])
+    }
+  }
+  if (read_qc == "fastq_scan") {
+    call fastq_scan.fastq_scan_pe as fastq_scan_clean {
+      input:
+        read1 = bbduk.read1_clean,
+        read2 = bbduk.read2_clean,
+        docker = select_first([fastq_scan_docker_image, "us-docker.pkg.dev/general-theiagen/biocontainers/fastq-scan:1.0.1--h4ac6f70_3"])
+    }
+  }
+  output {
+    # NCBI scrubber
+    File? read1_dehosted = ncbi_scrub_pe.read1_dehosted
+    File? read2_dehosted = ncbi_scrub_pe.read2_dehosted
+    Int? ncbi_scrub_human_spots_removed = ncbi_scrub_pe.human_spots_removed
+    String? ncbi_scrub_docker = ncbi_scrub_pe.ncbi_scrub_docker
+    # bbduk
+    File read1_clean = bbduk.read1_clean
+    File read2_clean = bbduk.read2_clean
+    String bbduk_docker = bbduk.bbduk_docker
+    # fastq_scan raw (per read stats)
+    Int? fastq_scan_raw1 = fastq_scan_raw.read1_seq
+    Int? fastq_scan_raw2 = fastq_scan_raw.read2_seq
+    Float? fastq_scan_r1_mean_readlength_raw = fastq_scan_raw.read1_mean_length
+    Float? fastq_scan_r2_mean_readlength_raw = fastq_scan_raw.read2_mean_length
+    Float? fastq_scan_r1_mean_q_raw = fastq_scan_raw.read1_mean_quality
+    Float? fastq_scan_r2_mean_q_raw = fastq_scan_raw.read2_mean_quality
+    String? fastq_scan_raw_pairs = fastq_scan_raw.read_pairs
+    String? fastq_scan_version = fastq_scan_raw.version
+    String? fastq_scan_docker = fastq_scan_raw.fastq_scan_docker
+    File? fastq_scan_raw1_json = fastq_scan_raw.read1_fastq_scan_json
+    File? fastq_scan_raw2_json = fastq_scan_raw.read2_fastq_scan_json
+    # fastq_scan clean (per read stats)
+    Int? fastq_scan_clean1 = fastq_scan_clean.read1_seq
+    Int? fastq_scan_clean2 = fastq_scan_clean.read2_seq
+    Float? fastq_scan_r1_mean_readlength_clean = fastq_scan_clean.read1_mean_length
+    Float? fastq_scan_r2_mean_readlength_clean = fastq_scan_clean.read2_mean_length
+    Float? fastq_scan_r1_mean_q_clean = fastq_scan_clean.read1_mean_quality
+    Float? fastq_scan_r2_mean_q_clean = fastq_scan_clean.read2_mean_quality
+    String? fastq_scan_clean_pairs = fastq_scan_clean.read_pairs
+    File? fastq_scan_clean1_json = fastq_scan_clean.read1_fastq_scan_json
+    File? fastq_scan_clean2_json = fastq_scan_clean.read2_fastq_scan_json
+    # fastqc (per base stats)
+    Int? fastqc_raw1 = fastqc_raw.read1_seq
+    Int? fastqc_raw2 = fastqc_raw.read2_seq
+    String? fastqc_raw_pairs = fastqc_raw.read_pairs
+    Int? fastqc_clean1 = fastqc_clean.read1_seq
+    Int? fastqc_clean2 = fastqc_clean.read2_seq
+    String? fastqc_clean_pairs = fastqc_clean.read_pairs
+    String? fastqc_version = fastqc_raw.version
+    String? fastqc_docker = fastqc_raw.fastqc_docker
+    File? fastqc_raw1_html = fastqc_raw.read1_fastqc_html
+    File? fastqc_raw2_html = fastqc_raw.read2_fastqc_html
+    File? fastqc_clean1_html = fastqc_clean.read1_fastqc_html
+    File? fastqc_clean2_html = fastqc_clean.read2_fastqc_html
+    # kraken2 - theiacov, theiaprok
+    String kraken_version = select_first([kraken2_theiacov_raw.version, kraken2_standalone_theiaprok.kraken2_version, ""])
+    Float? kraken_human =  kraken2_theiacov_raw.percent_human
+    String? kraken_sc2 = kraken2_theiacov_raw.percent_sc2
+    String? kraken_target_organism = kraken2_theiacov_raw.percent_target_organism
+    String kraken_report = select_first([kraken2_theiacov_raw.kraken_report, kraken2_standalone_theiaprok.kraken2_report, ""])
+    Float? kraken_human_dehosted = kraken2_theiacov_dehosted.percent_human
+    String? kraken_sc2_dehosted = kraken2_theiacov_dehosted.percent_sc2
+    String? kraken_target_organism_dehosted = kraken2_theiacov_dehosted.percent_target_organism
+    String? kraken_target_organism_name = target_organism
+    File? kraken_report_dehosted = kraken2_theiacov_dehosted.kraken_report
+    String kraken_docker = select_first([kraken2_theiacov_raw.docker, kraken2_standalone_theiaprok.kraken2_docker, ""])
+    String kraken_database = select_first([kraken2_theiacov_raw.database, kraken2_standalone_theiaprok.kraken2_database, kraken_db_warning, ""])
+    # trimming versioning
+    String? trimmomatic_version = trimmomatic.version
+    String? trimmomatic_docker = trimmomatic.trimmomatic_docker
+    String? fastp_version = fastp.fastp_version
+    String? fastp_docker = fastp.fastp_docker
+    File? fastp_html_report = fastp.fastp_stats_html
+    File? fastp_json_report = fastp.fastp_stats_json
+    # midas
+    String? midas_docker = midas.midas_docker
+    File? midas_report = midas.midas_report
+    String? midas_primary_genus = midas.midas_primary_genus
+    String? midas_secondary_genus = midas.midas_secondary_genus
+    Float? midas_secondary_genus_abundance = midas.midas_secondary_genus_abundance
+    Float? midas_secondary_genus_coverage = midas.midas_secondary_genus_coverage
+    # readlength
+    Float? average_read_length = readlength.average_read_length
+  }
+}
