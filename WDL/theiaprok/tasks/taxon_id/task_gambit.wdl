@@ -4,7 +4,7 @@ task gambit {
   input {
     File assembly
     String samplename
-    String docker = "us-docker.pkg.dev/general-theiagen/staphb/gambit:1.0.0"
+    String docker = "manifoldai/gambit:1.0.0"
     File gambit_db_genomes = "gs://gambit-databases-rp/2.1.0/gambit-metadata-2.1.0-20250808.gdb"
     File gambit_db_signatures = "gs://gambit-databases-rp/2.1.0/gambit-signatures-2.1.0-20250808.gs"
     Int disk_size = 20

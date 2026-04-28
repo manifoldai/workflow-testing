@@ -8,7 +8,7 @@ task shigatyper {
     File read1 
     File? read2
     String samplename
-    String docker = "us-docker.pkg.dev/general-theiagen/staphb/shigatyper:2.0.5"
+    String docker = "manifoldai/shigatyper:2.0.5"
     Int disk_size = 100
     Int cpu = 4
     Int memory = 16

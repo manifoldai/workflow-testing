@@ -5,7 +5,7 @@ task trimmomatic {
     File read1
     File? read2
     String samplename
-    String docker = "us-docker.pkg.dev/general-theiagen/staphb/trimmomatic:0.40"
+    String docker = "manifoldai/trimmomatic:0.40"
     Int trimmomatic_min_length = 75 # for PE reads; default is 25 for SE reads
     Int trimmomatic_window_size = 4
     Int trimmomatic_window_quality = 30

@@ -8,7 +8,7 @@ task sonneityping {
     Boolean ont_data = false
     String samplename
     String? mykrobe_opts
-    String docker = "us-docker.pkg.dev/general-theiagen/staphb/mykrobe:0.12.1-sonneityping"
+    String docker = "manifoldai/mykrobe-sonneityping:0.12.1"
     Int disk_size = 100
     Int cpu = 4
     Int memory = 8

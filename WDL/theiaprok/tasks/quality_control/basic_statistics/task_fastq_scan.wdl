@@ -5,7 +5,7 @@ task fastq_scan_pe {
     File read1
     File read2
     Int disk_size = 50
-    String docker = "us-docker.pkg.dev/general-theiagen/biocontainers/fastq-scan:1.0.1--h4ac6f70_3"
+    String docker = "manifoldai/fastq-scan:1.0.1"
     Int memory = 4
     Int cpu = 1
   }
@@ -96,7 +96,7 @@ task fastq_scan_se {
     Int disk_size = 50
     Int memory = 2
     Int cpu = 1
-    String docker = "us-docker.pkg.dev/general-theiagen/biocontainers/fastq-scan:1.0.1--h4ac6f70_3"
+    String docker = "manifoldai/fastq-scan:1.0.1"
   }  
   String read1_name = basename(basename(basename(read1, ".gz"), ".fastq"), ".fq")
   command <<<

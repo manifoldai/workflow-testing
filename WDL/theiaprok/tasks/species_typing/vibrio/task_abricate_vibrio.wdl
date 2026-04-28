@@ -9,7 +9,7 @@ task abricate_vibrio {
     Int min_percent_coverage
     Int cpu = 2
     Int memory = 4
-    String docker = "us-docker.pkg.dev/general-theiagen/staphb/abricate:1.0.1-vibrio-cholera"
+    String docker = "manifoldai/abricate-vibrio:1.0.1"
     Int disk_size = 100
   }
   command <<<

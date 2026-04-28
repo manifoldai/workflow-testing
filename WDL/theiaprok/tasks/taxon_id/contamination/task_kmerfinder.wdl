@@ -5,7 +5,7 @@ task kmerfinder_bacteria {
     File assembly
     String samplename
     File kmerfinder_db = "gs://theiagen-public-resources-rp/reference_data/databases/kmerfinder/kmerfinder_bacteria_20230911.tar.gz"
-    String docker = "us-docker.pkg.dev/general-theiagen/biocontainers/kmerfinder:3.0.2--hdfd78af_0"
+    String docker = "manifoldai/kmerfinder:3.0.2"
     Int memory = 32
     Int cpu = 4
     Int disk_size = 100

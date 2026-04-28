@@ -5,7 +5,7 @@ task megahit {
     File read1
     File? read2
     String samplename
-    String docker = "us-docker.pkg.dev/general-theiagen/theiagen/megahit:1.2.9"
+    String docker = "manifoldai/megahit:1.2.9"
     Int disk_size = 100
     Int cpu = 4
     Int memory = 16

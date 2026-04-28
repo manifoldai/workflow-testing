@@ -5,7 +5,7 @@ task amr_search {
     File input_fasta
     String samplename
     String amr_search_database = "485"
-    String docker = "us-docker.pkg.dev/general-theiagen/theiagen/amrsearch:0.2.1"
+    String docker = "manifoldai/amrsearch:0.2.1"
     Int cpu = 2
     Int disk_size = 50
     Int memory = 8

@@ -7,7 +7,7 @@ task staphopiasccmec {
   input {
     File assembly
     String samplename
-    String docker = "us-docker.pkg.dev/general-theiagen/biocontainers/staphopia-sccmec:1.0.0--hdfd78af_0"
+    String docker = "manifoldai/staphopia-sccmec:1.0.0"
     Int disk_size = 100
     Int cpu = 1
     Int memory = 4

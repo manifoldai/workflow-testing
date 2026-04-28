@@ -7,7 +7,7 @@ task seqsero2s {
     String samplename
     String mode = "a"
     
-    String docker = "us-docker.pkg.dev/general-theiagen/staphb/seqsero2s:1.1.4"
+    String docker = "manifoldai/seqsero2s:1.1.4"
     Int disk_size = 100
     Int memory = 16
     Int cpu = 4
@@ -92,7 +92,7 @@ task seqsero2s_assembly {
     File assembly_fasta
     String samplename
 
-    String docker = "us-docker.pkg.dev/general-theiagen/staphb/seqsero2s:1.1.4"
+    String docker = "manifoldai/seqsero2s:1.1.4"
     Int disk_size = 100
     Int memory = 16
     Int cpu = 4

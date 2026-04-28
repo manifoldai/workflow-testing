@@ -14,7 +14,7 @@ task arln_stats {
     Int cpu = 2
     Int memory = 5
     Int disk_size = 10
-    String docker = "us-docker.pkg.dev/general-theiagen/theiagen/arln_stats:1.0.0"
+    String docker = "manifoldai/arln-stats:1.0.0"
   }
   command <<<
     set -euo pipefail

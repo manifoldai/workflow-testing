@@ -11,7 +11,7 @@ task gamma {
     Boolean output_fasta = true
     Boolean extended_output = false
     String samplename
-    String docker = "us-docker.pkg.dev/general-theiagen/staphb/gamma:2.2"
+    String docker = "manifoldai/gamma:2.2"
     Int cpu = 2
     Int disk_size = 50
     Int memory = 8

@@ -11,7 +11,7 @@ task hicap {
     Float min_gene_percent_identity = 0.70 #Minimum percentage identity to consider a single gene complete. [default: 0.70]
     Float min_broken_gene_percent_identity = 0.80 #Minimum percentage identity to consider a broken gene. [default: 0.80]
     Int broken_gene_length = 60 #Minimum length to consider a broken gene. [default: 60]
-    String docker = "us-docker.pkg.dev/general-theiagen/biocontainers/hicap:1.0.3--py_0"
+    String docker = "manifoldai/hicap:1.0.3"
     Int cpu = 2
     Int memory = 8
     Int disk_size = 50

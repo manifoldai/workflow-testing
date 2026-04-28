@@ -10,7 +10,7 @@ task pbptyper {
     String? db # A path to a directory containing FASTA files for 1A, 2B, and 2X proteins. In most cases using the default value will be all that is needed.
     Int min_percent_identity = 95 # Minimum percent identity to count a hit [default: 95]
     Int min_percent_coverage = 95 # Minimum percent coverage to count a hit [default: 95]  
-    String docker = "us-docker.pkg.dev/general-theiagen/staphb/pbptyper:1.0.4"
+    String docker = "manifoldai/pbptyper:1.0.4"
     Int disk_size = 100
     Int cpu = 4
     Int memory = 16

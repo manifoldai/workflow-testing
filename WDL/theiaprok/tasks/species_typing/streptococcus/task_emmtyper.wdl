@@ -10,7 +10,7 @@ task emmtyper {
   input {
     File assembly
     String samplename
-    String docker = "us-docker.pkg.dev/general-theiagen/biocontainers/emmtyper:0.2.0--py_0"
+    String docker = "manifoldai/emmtyper:0.2.0"
     Int cpu = 2
     Int memory = 8
     Int disk_size = 50

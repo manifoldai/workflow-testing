@@ -165,7 +165,7 @@ task bwa_all {
 
     Int cpu = 6
     Int disk_size = 100
-    String docker = "us-docker.pkg.dev/general-theiagen/staphb/bwa:0.7.18"
+    String docker = "manifoldai/bwa:0.7.18"
     Int memory = 16
   }
   command <<<

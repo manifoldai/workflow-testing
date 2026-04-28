@@ -9,7 +9,7 @@ task cauris_cladetyper {
     
     Int cpu = 8
     Int disk_size = 100
-    String docker = "us-docker.pkg.dev/general-theiagen/staphb/gambit:1.0.0"
+    String docker = "manifoldai/theiagen-utility:1.1"
     Int memory = 16
 
     File ref_clade1 = "gs://theiagen-public-resources-rp/reference_data/eukaryotic/candidozyma/Cauris_Clade1_GCA_002759435.3_Cand_auris_B8441_V3_genomic.fasta"

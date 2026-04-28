@@ -82,83 +82,83 @@ workflow theiaprok_illumina_pe {
     String genome_annotation = "prokka" # options: "prokka" or "bakta"
     String bakta_db = "full" # Default: "light" or "full"
     String? expected_taxon  # allow user to provide organism (e.g. "Clostridioides_difficile") string to amrfinder. Useful when gambit does not predict the correct species    # qc check parameters
-    # Docker image overrides — core tasks
-    String? version_capture_docker_image
-    String? check_reads_docker_image
-    String? quast_docker_image
-    String? cg_pipeline_docker_image
-    String? busco_docker_image
-    String? gambit_docker_image
-    String? ani_docker_image
-    String? kmerfinder_docker_image
-    String? amrfinderplus_docker_image
-    String? gamma_docker_image
-    String? resfinder_docker_image
-    String? ts_mlst_docker_image
-    String? prokka_docker_image
-    String? bakta_docker_image
-    String? plasmidfinder_docker_image
-    String? abricate_docker_image
-    String? qc_check_docker_image
-    String? export_taxon_table_docker_image
-    String? arln_stats_docker_image
+    # Docker image overrides — core tasks (defaults align with Manifold inputs JSON)
+    String version_capture_docker_image = "manifoldai/alpine-plus-bash:3.20.0"
+    String check_reads_docker_image = "manifoldai/bactopia-gather-samples:2.0.2"
+    String quast_docker_image = "manifoldai/quast:5.0.2"
+    String cg_pipeline_docker_image = "manifoldai/lyveset:1.1.4f"
+    String busco_docker_image = "manifoldai/busco:v5.7.1_cv1"
+    String gambit_docker_image = "manifoldai/gambit:1.0.0"
+    String ani_docker_image = "manifoldai/mummer:4.0.0-rgdv2"
+    String kmerfinder_docker_image = "manifoldai/kmerfinder:3.0.2"
+    String amrfinderplus_docker_image = "manifoldai/ncbi-amrfinderplus:4.0.23"
+    String gamma_docker_image = "manifoldai/gamma:2.2"
+    String resfinder_docker_image = "manifoldai/resfinder:4.1.11"
+    String ts_mlst_docker_image = "manifoldai/mlst:2.23.0"
+    String prokka_docker_image = "manifoldai/prokka:1.14.5"
+    String bakta_docker_image = "manifoldai/bakta:1.10.3"
+    String plasmidfinder_docker_image = "manifoldai/plasmidfinder:2.1.6"
+    String abricate_docker_image = "manifoldai/abricate-abaum:1.0.1"
+    String qc_check_docker_image = "manifoldai/terra-tools:2024-08-27"
+    String export_taxon_table_docker_image = "manifoldai/terra-tools:2023-06-21"
+    String arln_stats_docker_image = "manifoldai/arln-stats:1.0.0"
     # Docker image overrides — read QC sub-workflow
-    String? fastqc_docker_image
-    String? fastq_scan_docker_image
-    String? trimmomatic_docker_image
-    String? fastp_docker_image
-    String? bbduk_docker_image
-    String? kraken2_docker_image
-    String? ncbi_scrub_docker_image
-    String? midas_docker_image
-    String? readlength_docker_image
+    String fastqc_docker_image = "manifoldai/fastqc:0.12.1"
+    String fastq_scan_docker_image = "manifoldai/fastq-scan:1.0.1"
+    String trimmomatic_docker_image = "manifoldai/trimmomatic:0.40"
+    String fastp_docker_image = "manifoldai/fastp:0.23.2"
+    String bbduk_docker_image = "manifoldai/bbtools:39.38_python"
+    String kraken2_docker_image = "manifoldai/kraken2:2.1.2-no-db"
+    String ncbi_scrub_docker_image = "manifoldai/sra-human-scrubber:2.2.1"
+    String midas_docker_image = "manifoldai/midas:v1.3.2"
+    String readlength_docker_image = "manifoldai/bbtools:38.76"
     # Docker image overrides — assembly sub-workflow (digger_denovo)
-    String? spades_docker_image
-    String? skesa_docker_image
-    String? megahit_docker_image
-    String? bwa_docker_image
-    String? pilon_docker_image
-    String? filter_contigs_docker_image
+    String spades_docker_image = "manifoldai/spades:4.1.0"
+    String skesa_docker_image = "manifoldai/skesa:2.4.0"
+    String megahit_docker_image = "manifoldai/megahit:1.2.9"
+    String bwa_docker_image = "manifoldai/bwa:0.7.18"
+    String pilon_docker_image = "manifoldai/pilon:1.24"
+    String filter_contigs_docker_image = "manifoldai/shovilter:0.2"
     # Docker image overrides — concatenate lanes sub-workflow
-    String? cat_lanes_docker_image
+    String cat_lanes_docker_image = "manifoldai/theiagen-utility:1.2"
     # Docker image overrides — merlin_magic sub-workflow (species-specific)
-    String? merlin_abricate_abaum_docker_image
-    String? merlin_abricate_vibrio_docker_image
-    String? merlin_agrvate_docker_image
-    String? merlin_amr_search_docker_image
-    String? merlin_cauris_cladetyper_docker_image
-    String? merlin_clockwork_docker_image
-    String? merlin_ectyper_docker_image
-    String? merlin_emmtyper_docker_image
-    String? merlin_emmtypingtool_docker_image
-    String? merlin_genotyphi_docker_image
-    String? merlin_hicap_docker_image
-    String? merlin_kaptive_docker_image
-    String? merlin_kleborate_docker_image
-    String? merlin_legsta_docker_image
-    String? merlin_lissero_docker_image
-    String? merlin_meningotype_docker_image
-    String? merlin_ngmaster_docker_image
-    String? merlin_pasty_docker_image
-    String? merlin_pbptyper_docker_image
-    String? merlin_poppunk_docker_image
-    String? merlin_seqsero2s_docker_image
-    String? merlin_seroba_docker_image
-    String? merlin_serotypefinder_docker_image
-    String? merlin_shigatyper_docker_image
-    String? merlin_shigeifinder_docker_image
-    String? merlin_sistr_docker_image
-    String? merlin_snippy_gene_query_docker_image
-    String? merlin_snippy_variants_docker_image
-    String? merlin_sonneityping_docker_image
-    String? merlin_spatyper_docker_image
-    String? merlin_srst2_docker_image
-    String? merlin_staphopia_sccmec_docker_image
-    String? merlin_tbprofiler_docker_image
-    String? merlin_tbp_parser_docker_image
-    String? merlin_vibecheck_docker_image
-    String? merlin_virulencefinder_docker_image
-    String? merlin_stxtyper_docker_image
+    String merlin_abricate_abaum_docker_image = "manifoldai/abricate-abaum:1.0.1"
+    String merlin_abricate_vibrio_docker_image = "manifoldai/abricate-vibrio:1.0.1"
+    String merlin_agrvate_docker_image = "manifoldai/agrvate:1.0.2"
+    String merlin_amr_search_docker_image = "manifoldai/amrsearch:0.2.1"
+    String merlin_cauris_cladetyper_docker_image = "manifoldai/theiagen-utility:1.1"
+    String merlin_clockwork_docker_image = "manifoldai/clockwork:latest"
+    String merlin_ectyper_docker_image = "manifoldai/ectyper:2.0.0"
+    String merlin_emmtyper_docker_image = "manifoldai/emmtyper:0.2.0"
+    String merlin_emmtypingtool_docker_image = "manifoldai/emmtypingtool:0.0.1"
+    String merlin_genotyphi_docker_image = "manifoldai/mykrobe:0.11.0"
+    String merlin_hicap_docker_image = "manifoldai/hicap:1.0.3"
+    String merlin_kaptive_docker_image = "manifoldai/kaptive:2.0.3"
+    String merlin_kleborate_docker_image = "manifoldai/kleborate:2.2.0"
+    String merlin_legsta_docker_image = "manifoldai/legsta:0.5.1"
+    String merlin_lissero_docker_image = "manifoldai/lissero:0.4.9"
+    String merlin_meningotype_docker_image = "manifoldai/meningotype:0.8.5"
+    String merlin_ngmaster_docker_image = "manifoldai/ngmaster:1.0.0"
+    String merlin_pasty_docker_image = "manifoldai/pasty:1.0.3"
+    String merlin_pbptyper_docker_image = "manifoldai/pbptyper:1.0.4"
+    String merlin_poppunk_docker_image = "manifoldai/poppunk:2.4.0"
+    String merlin_seqsero2s_docker_image = "manifoldai/seqsero2s:1.1.4"
+    String merlin_seroba_docker_image = "manifoldai/seroba:1.0.2"
+    String merlin_serotypefinder_docker_image = "manifoldai/serotypefinder:2.0.1"
+    String merlin_shigatyper_docker_image = "manifoldai/shigatyper:2.0.5"
+    String merlin_shigeifinder_docker_image = "manifoldai/shigeifinder:1.3.5"
+    String merlin_sistr_docker_image = "manifoldai/sistr:1.1.3"
+    String merlin_snippy_gene_query_docker_image = "manifoldai/snippy:4.6.0"
+    String merlin_snippy_variants_docker_image = "manifoldai/snippy:4.6.0"
+    String merlin_sonneityping_docker_image = "manifoldai/mykrobe-sonneityping:0.12.1"
+    String merlin_spatyper_docker_image = "manifoldai/spatyper:0.3.3"
+    String merlin_srst2_docker_image = "manifoldai/srst2-vibrio:0.2.0"
+    String merlin_staphopia_sccmec_docker_image = "manifoldai/staphopia-sccmec:1.0.0"
+    String merlin_tbprofiler_docker_image = "manifoldai/tbprofiler:6.6.3"
+    String merlin_tbp_parser_docker_image = "manifoldai/tbp-parser:2.9.1"
+    String merlin_vibecheck_docker_image = "manifoldai/vibecheck:2025.06.26"
+    String merlin_virulencefinder_docker_image = "manifoldai/virulencefinder:2.0.4"
+    String merlin_stxtyper_docker_image = "manifoldai/stxtyper:1.0.42"
     # Database file overrides
     File? gambit_db_genomes_override
     File? gambit_db_signatures_override
@@ -171,7 +171,7 @@ workflow theiaprok_illumina_pe {
   }
   call versioning.version_capture {
     input:
-      docker = select_first([version_capture_docker_image, "us-docker.pkg.dev/general-theiagen/theiagen/alpine-plus-bash:3.20.0"])
+      docker = version_capture_docker_image
   }
   if (defined(read1_lane2)) {
     call concatenate_lanes_workflow.concatenate_illumina_lanes {
@@ -202,7 +202,7 @@ workflow theiaprok_illumina_pe {
         min_proportion = min_proportion,
         expected_genome_length = genome_length,
         workflow_series = "theiaprok",
-        docker = select_first([check_reads_docker_image, "us-docker.pkg.dev/general-theiagen/bactopia/gather_samples:2.0.2"])
+        docker = check_reads_docker_image
     }
   }
   if (select_first([raw_check_reads.read_screen, ""]) == "PASS" || skip_screen) {
@@ -238,7 +238,7 @@ workflow theiaprok_illumina_pe {
           min_proportion = min_proportion,
           expected_genome_length = genome_length,
           workflow_series = "theiaprok",
-          docker = select_first([check_reads_docker_image, "us-docker.pkg.dev/general-theiagen/bactopia/gather_samples:2.0.2"])
+          docker = check_reads_docker_image
       }
     }
     if (select_first([clean_check_reads.read_screen, ""]) == "PASS" || skip_screen) {
@@ -258,7 +258,7 @@ workflow theiaprok_illumina_pe {
         input:
           assembly = digger_denovo.assembly_fasta,
           samplename = samplename,
-          docker = select_first([quast_docker_image, "us-docker.pkg.dev/general-theiagen/staphb/quast:5.0.2"])
+          docker = quast_docker_image
       }
       call cg_pipeline.cg_pipeline as cg_pipeline_raw {
         input:
@@ -266,7 +266,7 @@ workflow theiaprok_illumina_pe {
           read2 = select_first([concatenate_illumina_lanes.read2_concatenated, read2]),
           samplename = samplename,
           genome_length = select_first([genome_length, quast.genome_length]),
-          docker = select_first([cg_pipeline_docker_image, "us-docker.pkg.dev/general-theiagen/staphb/lyveset:1.1.4f"])
+          docker = cg_pipeline_docker_image
       }
       call cg_pipeline.cg_pipeline as cg_pipeline_clean {
         input:
@@ -274,20 +274,20 @@ workflow theiaprok_illumina_pe {
           read2 = read_QC_trim.read2_clean,
           samplename = samplename,
           genome_length = select_first([genome_length, quast.genome_length]),
-          docker = select_first([cg_pipeline_docker_image, "us-docker.pkg.dev/general-theiagen/staphb/lyveset:1.1.4f"])
+          docker = cg_pipeline_docker_image
       }
       call busco_task.busco {
         input:
           assembly = digger_denovo.assembly_fasta,
           samplename = samplename,
-          docker = select_first([busco_docker_image, "us-docker.pkg.dev/general-theiagen/ezlabgva/busco:v5.7.1_cv1"])
+          docker = busco_docker_image
       }
       if (perform_characterization) {
         call gambit_task.gambit {
           input:
             assembly = digger_denovo.assembly_fasta,
             samplename = samplename,
-            docker = select_first([gambit_docker_image, "us-docker.pkg.dev/general-theiagen/staphb/gambit:1.0.0"]),
+            docker = gambit_docker_image,
             gambit_db_genomes = select_first([gambit_db_genomes_override, "gs://gambit-databases-rp/2.1.0/gambit-metadata-2.1.0-20250808.gdb"]),
             gambit_db_signatures = select_first([gambit_db_signatures_override, "gs://gambit-databases-rp/2.1.0/gambit-signatures-2.1.0-20250808.gs"])
         }
@@ -296,7 +296,7 @@ workflow theiaprok_illumina_pe {
             input:
               assembly = digger_denovo.assembly_fasta,
               samplename = samplename,
-              docker = select_first([ani_docker_image, "us-docker.pkg.dev/general-theiagen/staphb/mummer:4.0.0-rgdv2"])
+              docker = ani_docker_image
           }
         }
         if (call_kmerfinder) {
@@ -304,7 +304,7 @@ workflow theiaprok_illumina_pe {
             input:
               assembly = digger_denovo.assembly_fasta,
               samplename = samplename,
-              docker = select_first([kmerfinder_docker_image, "us-docker.pkg.dev/general-theiagen/biocontainers/kmerfinder:3.0.2--hdfd78af_0"]),
+              docker = kmerfinder_docker_image,
               kmerfinder_db = select_first([kmerfinder_db_override, "gs://theiagen-public-resources-rp/reference_data/databases/kmerfinder/kmerfinder_bacteria_20230911.tar.gz"])
           }
         }
@@ -318,14 +318,14 @@ workflow theiaprok_illumina_pe {
             organism = select_first([expected_taxon, gambit.gambit_predicted_taxon]),
             annotation_format = genome_annotation,
             use_gff = amrfinder_use_gff,
-            docker = select_first([amrfinderplus_docker_image, "us-docker.pkg.dev/general-theiagen/staphb/ncbi-amrfinderplus:4.0.23-2025-07-16.1"])
+            docker = amrfinderplus_docker_image
         }
         if (call_gamma){
           call gamma_task.gamma{
             input:
               assembly = digger_denovo.assembly_fasta,
               samplename = samplename,
-              docker = select_first([gamma_docker_image, "us-docker.pkg.dev/general-theiagen/staphb/gamma:2.2"]),
+              docker = gamma_docker_image,
               gamma_db = select_first([gamma_db_override, "gs://theiagen-public-resources-rp/reference_data/databases/gamma/default_ResFinderDB_Combined_05-06-20.fsa"])
           }
         }
@@ -335,7 +335,7 @@ workflow theiaprok_illumina_pe {
               assembly = digger_denovo.assembly_fasta,
               samplename = samplename,
               organism = select_first([expected_taxon, gambit.gambit_predicted_taxon]),
-              docker = select_first([resfinder_docker_image, "us-docker.pkg.dev/general-theiagen/staphb/resfinder:4.1.11"])
+              docker = resfinder_docker_image
           }
         }
         call ts_mlst_task.ts_mlst {
@@ -345,14 +345,14 @@ workflow theiaprok_illumina_pe {
             taxonomy = select_first([expected_taxon, gambit.gambit_predicted_taxon]),
             run_secondary_scheme = mlst_run_secondary_scheme,
             scheme_override = mlst_scheme_override,
-            docker = select_first([ts_mlst_docker_image, "us-docker.pkg.dev/general-theiagen/staphb/mlst:2.23.0-2024-12-31"])
+            docker = ts_mlst_docker_image
         }
         if (genome_annotation == "prokka") {
           call prokka_task.prokka {
             input:
               assembly = digger_denovo.assembly_fasta,
               samplename = samplename,
-              docker = select_first([prokka_docker_image, "us-docker.pkg.dev/general-theiagen/staphb/prokka:1.14.5"])
+              docker = prokka_docker_image
           }
         }
         if (genome_annotation == "bakta") {  
@@ -370,7 +370,7 @@ workflow theiaprok_illumina_pe {
               assembly = digger_denovo.assembly_fasta,
               samplename = samplename,
               bakta_db_selected = select_first([bakta_custom_db, bakta_db_light, bakta_db_full]),
-              docker = select_first([bakta_docker_image, "us-docker.pkg.dev/general-theiagen/staphb/bakta:1.10.3"])
+              docker = bakta_docker_image
           }
         }
         if (call_plasmidfinder) {
@@ -378,7 +378,7 @@ workflow theiaprok_illumina_pe {
             input:
               assembly = digger_denovo.assembly_fasta,
               samplename = samplename,
-              docker = select_first([plasmidfinder_docker_image, "us-docker.pkg.dev/general-theiagen/staphb/plasmidfinder:2.1.6"])
+              docker = plasmidfinder_docker_image
           }
         }
         if (call_abricate) {
@@ -387,7 +387,7 @@ workflow theiaprok_illumina_pe {
               assembly = digger_denovo.assembly_fasta,
               samplename = samplename,
               database = abricate_db,
-              docker = select_first([abricate_docker_image, "us-docker.pkg.dev/general-theiagen/staphb/abricate:1.0.1-abaum-plasmid"])
+              docker = abricate_docker_image
           }
         }
         if (defined(qc_check_table)) {
@@ -425,7 +425,7 @@ workflow theiaprok_illumina_pe {
                 "ani_highest_percent": ani.ani_highest_percent,
                 "ani_highest_percent_bases_aligned": ani.ani_highest_percent_bases_aligned
               },
-              docker = select_first([qc_check_docker_image, "us-docker.pkg.dev/general-theiagen/theiagen/terra-tools:2024-08-27"])
+              docker = qc_check_docker_image
           }
         }
         call merlin_magic_workflow.merlin_magic {
@@ -932,7 +932,7 @@ workflow theiaprok_illumina_pe {
                 "gamma_results": gamma.gamma_results,
                 "gamma_version": gamma.gamma_version
             },
-              docker = select_first([export_taxon_table_docker_image, "us-docker.pkg.dev/general-theiagen/theiagen/terra-tools:2023-06-21"])
+              docker = export_taxon_table_docker_image
           }
         }
         if (call_arln_stats) {
@@ -947,7 +947,7 @@ workflow theiaprok_illumina_pe {
               read2_raw = select_first([concatenate_illumina_lanes.read1_concatenated, read2]),
               read1_clean = read_QC_trim.read1_clean,
               read2_clean = read_QC_trim.read2_clean,
-              docker = select_first([arln_stats_docker_image, "us-docker.pkg.dev/general-theiagen/theiagen/arln_stats:1.0.0"])
+              docker = arln_stats_docker_image
           }
         }
       }

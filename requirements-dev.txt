@@ -1,0 +1,5 @@
+# Dev tools for WDL (optional). Install with:
+#   python3 -m pip install --user -r requirements-dev.txt
+# Then add pip's user scripts directory to PATH, e.g.:
+#   export PATH="$HOME/Library/Python/3.12/bin:$PATH"
+miniwdl>=1.14

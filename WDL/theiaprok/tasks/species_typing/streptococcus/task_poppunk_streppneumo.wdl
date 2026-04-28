@@ -7,7 +7,7 @@ task poppunk {
   input {
     File assembly
     String samplename
-    String docker = "us-docker.pkg.dev/general-theiagen/staphb/poppunk:2.4.0"
+    String docker = "manifoldai/poppunk:2.4.0"
     Int disk_size = 100
     Int cpu = 4
     Int memory = 16

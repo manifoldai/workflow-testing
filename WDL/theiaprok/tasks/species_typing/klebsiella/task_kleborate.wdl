@@ -5,7 +5,7 @@ task kleborate {
   input {
     File assembly
     String samplename
-    String docker = "us-docker.pkg.dev/general-theiagen/staphb/kleborate:2.2.0"
+    String docker = "manifoldai/kleborate:2.2.0"
     Int disk_size = 100
     Int cpu = 8
     Int memory = 16

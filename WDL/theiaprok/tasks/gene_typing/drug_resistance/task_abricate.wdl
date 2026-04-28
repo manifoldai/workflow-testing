@@ -10,7 +10,7 @@ task abricate {
     Int cpu = 2
     Int memory = 8
     Int disk_size = 100
-    String docker = "us-docker.pkg.dev/general-theiagen/staphb/abricate:1.0.1-abaum-plasmid"
+    String docker = "manifoldai/abricate-abaum:1.0.1"
   }
   command <<<
     date | tee DATE

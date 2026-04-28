@@ -16,7 +16,7 @@ task cat_lanes {
 
     Int cpu = 2
     Int disk_size = 50
-    String docker = "us-docker.pkg.dev/general-theiagen/theiagen/utility:1.2"
+    String docker = "manifoldai/theiagen-utility:1.2"
     Int memory = 4
   }
   meta {

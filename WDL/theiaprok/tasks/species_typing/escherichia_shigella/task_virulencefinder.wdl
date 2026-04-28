@@ -7,7 +7,7 @@ task virulencefinder {
     #File? read1
     #File? read2
     String samplename
-    String docker = "us-docker.pkg.dev/general-theiagen/staphb/virulencefinder:2.0.4"
+    String docker = "manifoldai/virulencefinder:2.0.4"
     Int disk_size = 100
     Int memory = 8
     Int cpu = 2

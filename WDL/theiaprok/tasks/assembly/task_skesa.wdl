@@ -5,7 +5,7 @@ task skesa {
     File read1
     File? read2
     String samplename
-    String docker = "us-docker.pkg.dev/general-theiagen/staphb/skesa:2.4.0"
+    String docker = "manifoldai/skesa:2.4.0"
     Int disk_size = 100
     Int cpu = 4
     Int memory = 16

@@ -13,7 +13,7 @@ task filter_contigs {
     Int memory = 8
     Int cpu = 1
     # Found in theiagen-docker-builds/assembly-filter
-    String docker = "us-docker.pkg.dev/general-theiagen/theiagen/shovilter:0.2"
+    String docker = "manifoldai/shovilter:0.2"
   }
   command <<< 
     set -euo pipefail

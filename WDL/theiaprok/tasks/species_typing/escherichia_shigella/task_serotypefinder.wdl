@@ -4,7 +4,7 @@ task serotypefinder {
   input {
     File assembly
     String samplename
-    String docker = "us-docker.pkg.dev/general-theiagen/staphb/serotypefinder:2.0.1"
+    String docker = "manifoldai/serotypefinder:2.0.1"
     Int disk_size = 100
     Int cpu = 2
     Int memory = 8

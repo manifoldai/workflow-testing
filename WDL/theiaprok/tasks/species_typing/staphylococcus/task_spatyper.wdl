@@ -7,7 +7,7 @@ task spatyper {
   input {
     File assembly
     String samplename
-    String docker = "us-docker.pkg.dev/general-theiagen/biocontainers/spatyper:0.3.3--pyhdfd78af_3"
+    String docker = "manifoldai/spatyper:0.3.3"
     Int disk_size = 100
     Int cpu = 4
     Int memory = 8

@@ -7,7 +7,7 @@ task snippy_variants {
     File? read1
     File? read2
     String samplename
-    String docker = "us-docker.pkg.dev/general-theiagen/staphb/snippy:4.6.0"
+    String docker = "manifoldai/snippy:4.6.0"
     Int cpu = 8
     Int memory = 32
     Int disk_size = 100

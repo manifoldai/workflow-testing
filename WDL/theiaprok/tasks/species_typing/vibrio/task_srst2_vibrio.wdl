@@ -13,7 +13,7 @@ task srst2_vibrio {
     Int min_depth
     Int min_edge_depth
     Int gene_max_mismatch
-    String docker = "us-docker.pkg.dev/general-theiagen/staphb/srst2:0.2.0-vcholerae"
+    String docker = "manifoldai/srst2-vibrio:0.2.0"
     Int disk_size = 100
     Int cpu = 4
     Int memory = 8

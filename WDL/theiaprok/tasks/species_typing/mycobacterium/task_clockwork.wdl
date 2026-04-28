@@ -8,7 +8,7 @@ task clockwork_decon_reads {
     Int disk_size = 200
     Int cpu = 16
     Int memory = 64
-    String docker = "us-docker.pkg.dev/general-theiagen/cdcgov/varpipe_wgs_with_refs:2bc7234074bd53d9e92a1048b0485763cd9bbf6f4d12d5a1cc82bfec8ca7d75e"
+    String docker = "manifoldai/clockwork:latest"
   }
   command <<<
     # Print and save version

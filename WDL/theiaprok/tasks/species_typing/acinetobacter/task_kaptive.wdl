@@ -5,7 +5,7 @@ task kaptive {
   input {
     File assembly
     String samplename
-    String docker = "us-docker.pkg.dev/general-theiagen/staphb/kaptive:2.0.3"
+    String docker = "manifoldai/kaptive:2.0.3"
     Int disk_size = 100
     Int cpu = 4
     Int memory = 8

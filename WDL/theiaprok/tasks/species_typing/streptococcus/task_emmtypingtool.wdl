@@ -8,7 +8,7 @@ task emmtypingtool {
     File read1
     File? read2
     String samplename
-    String docker = "us-docker.pkg.dev/general-theiagen/staphb/emmtypingtool:0.0.1"
+    String docker = "manifoldai/emmtypingtool:0.0.1"
     Int cpu = 2
     Int memory = 8
     Int disk_size = 100

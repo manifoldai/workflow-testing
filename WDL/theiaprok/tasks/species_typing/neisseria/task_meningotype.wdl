@@ -7,7 +7,7 @@ task meningotype {
   input {
     File assembly
     String samplename
-    String docker = "us-docker.pkg.dev/general-theiagen/biocontainers/meningotype:0.8.5--pyhdfd78af_0"
+    String docker = "manifoldai/meningotype:0.8.5"
     Int disk_size = 100
     Int cpu = 2
     Int memory = 8

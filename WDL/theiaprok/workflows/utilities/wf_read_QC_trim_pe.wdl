@@ -53,7 +53,7 @@ workflow read_QC_trim_pe {
       input:
         read1 = read1,
         read2 = read2,
-        docker = select_first([fastqc_docker_image, "us-docker.pkg.dev/general-theiagen/staphb/fastqc:0.12.1"])
+        docker = select_first([fastqc_docker_image, "manifoldai/fastqc:0.12.1"])
     }
   }
   if (read_qc == "fastq_scan") {
@@ -61,7 +61,7 @@ workflow read_QC_trim_pe {
       input:
         read1 = read1,
         read2 = read2,
-        docker = select_first([fastq_scan_docker_image, "us-docker.pkg.dev/general-theiagen/biocontainers/fastq-scan:1.0.1--h4ac6f70_3"])
+        docker = select_first([fastq_scan_docker_image, "manifoldai/fastq-scan:1.0.1"])
     }
   }
   if (("~{workflow_series}" == "theiacov") || ("~{workflow_series}" == "theiameta")) {
@@ -70,7 +70,7 @@ workflow read_QC_trim_pe {
         samplename = samplename,
         read1 = read1,
         read2 = read2,
-        docker = select_first([ncbi_scrub_docker_image, "us-docker.pkg.dev/general-theiagen/ncbi/sra-human-scrubber:2.2.1"])
+        docker = select_first([ncbi_scrub_docker_image, "manifoldai/sra-human-scrubber:2.2.1"])
     }
   }
   if ("~{workflow_series}" == "theiacov") {
@@ -84,7 +84,7 @@ workflow read_QC_trim_pe {
         disk_size = kraken_disk_size,
         memory = kraken_memory,
         cpu = kraken_cpu,
-        docker_image = select_first([kraken2_docker_image, "us-docker.pkg.dev/general-theiagen/staphb/kraken2:2.1.2-no-db"])
+        docker_image = select_first([kraken2_docker_image, "manifoldai/kraken2:2.1.2-no-db"])
     }
     call kraken.kraken2_theiacov as kraken2_theiacov_dehosted {
       input:
@@ -96,7 +96,7 @@ workflow read_QC_trim_pe {
         disk_size = kraken_disk_size,
         memory = kraken_memory,
         cpu = kraken_cpu,
-        docker_image = select_first([kraken2_docker_image, "us-docker.pkg.dev/general-theiagen/staphb/kraken2:2.1.2-no-db"])
+        docker_image = select_first([kraken2_docker_image, "manifoldai/kraken2:2.1.2-no-db"])
     }
   }
   if (read_processing == "trimmomatic") {
@@ -109,7 +109,7 @@ workflow read_QC_trim_pe {
         trimmomatic_window_quality = trim_quality_min_score,
         trimmomatic_min_length = trim_min_length,
         trimmomatic_override_args = trimmomatic_override_args,
-        docker = select_first([trimmomatic_docker_image, "us-docker.pkg.dev/general-theiagen/staphb/trimmomatic:0.40"])
+        docker = select_first([trimmomatic_docker_image, "manifoldai/trimmomatic:0.40"])
     }
   }
   if (read_processing == "fastp") {
@@ -122,7 +122,7 @@ workflow read_QC_trim_pe {
         fastp_quality_trim_score = trim_quality_min_score,
         fastp_min_length = trim_min_length,
         fastp_args = fastp_args,
-        docker = select_first([fastp_docker_image, "us-docker.pkg.dev/general-theiagen/staphb/fastp:0.23.2"])
+        docker = select_first([fastp_docker_image, "manifoldai/fastp:0.23.2"])
     }
   }
   call bbduk_task.bbduk {
@@ -133,7 +133,7 @@ workflow read_QC_trim_pe {
       memory = bbduk_memory,
       adapters_fasta = adapters,
       phix_fasta = phix,
-      docker = select_first([bbduk_docker_image, "us-docker.pkg.dev/general-theiagen/theiagen/bbtools:39.38_python"])
+      docker = select_first([bbduk_docker_image, "manifoldai/bbtools:39.38_python"])
   }
   if ("~{workflow_series}" == "theiaprok" || "~{workflow_series}" == "theiameta") {
     if (call_midas) {
@@ -143,7 +143,7 @@ workflow read_QC_trim_pe {
           read1 = read1,
           read2 = read2,
           midas_db = midas_db,
-          docker = select_first([midas_docker_image, "us-docker.pkg.dev/general-theiagen/fhcrc-microbiome/midas:v1.3.2--6"])
+          docker = select_first([midas_docker_image, "manifoldai/midas:v1.3.2"])
       }
     }
   }
@@ -158,7 +158,7 @@ workflow read_QC_trim_pe {
           disk_size = kraken_disk_size,
           memory = kraken_memory,
           cpu = kraken_cpu,
-          docker = select_first([kraken2_docker_image, "us-docker.pkg.dev/general-theiagen/staphb/kraken2:2.1.2-no-db"])
+          docker = select_first([kraken2_docker_image, "manifoldai/kraken2:2.1.2-no-db"])
       }
     }  
     if ((call_kraken) && ! defined(kraken_db)) {
@@ -170,7 +170,7 @@ workflow read_QC_trim_pe {
       input:
         read1 = bbduk.read1_clean,
         read2 = bbduk.read2_clean,
-        docker = select_first([readlength_docker_image, "us-docker.pkg.dev/general-theiagen/staphb/bbtools:38.76"])
+        docker = select_first([readlength_docker_image, "manifoldai/bbtools:38.76"])
     }
   }
   if (read_qc == "fastqc") {
@@ -178,7 +178,7 @@ workflow read_QC_trim_pe {
       input:
         read1 = bbduk.read1_clean,
         read2 = bbduk.read2_clean,
-        docker = select_first([fastqc_docker_image, "us-docker.pkg.dev/general-theiagen/staphb/fastqc:0.12.1"])
+        docker = select_first([fastqc_docker_image, "manifoldai/fastqc:0.12.1"])
     }
   }
   if (read_qc == "fastq_scan") {
@@ -186,7 +186,7 @@ workflow read_QC_trim_pe {
       input:
         read1 = bbduk.read1_clean,
         read2 = bbduk.read2_clean,
-        docker = select_first([fastq_scan_docker_image, "us-docker.pkg.dev/general-theiagen/biocontainers/fastq-scan:1.0.1--h4ac6f70_3"])
+        docker = select_first([fastq_scan_docker_image, "manifoldai/fastq-scan:1.0.1"])
     }
   }
   output {

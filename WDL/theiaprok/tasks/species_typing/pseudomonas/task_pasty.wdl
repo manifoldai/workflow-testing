@@ -6,7 +6,7 @@ task pasty {
     String samplename
     Int min_percent_identity = 95
     Int min_percent_coverage = 95
-    String docker = "us-docker.pkg.dev/general-theiagen/staphb/pasty:1.0.3"
+    String docker = "manifoldai/pasty:1.0.3"
     Int disk_size = 100
     Int memory = 4
     Int cpu = 2

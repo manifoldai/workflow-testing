@@ -7,7 +7,7 @@ task legsta {
   input {
     File assembly
     String samplename
-    String docker = "us-docker.pkg.dev/general-theiagen/biocontainers/legsta:0.5.1--hdfd78af_2"
+    String docker = "manifoldai/legsta:0.5.1"
     Int disk_size = 100
     Int memory = 8
     Int cpu = 2

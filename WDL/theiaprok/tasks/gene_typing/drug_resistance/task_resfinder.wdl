@@ -10,7 +10,7 @@ task resfinder {
     Float min_percent_identity = 0.9 # Threshold for identity of ResFinder
     Boolean call_pointfinder = false # Run pointfinder for chromosomal mutations
 
-    String docker = "us-docker.pkg.dev/general-theiagen/staphb/resfinder:4.1.11"
+    String docker = "manifoldai/resfinder:4.1.11"
     Int disk_size = 100
     Int cpu = 2
     Int memory = 8

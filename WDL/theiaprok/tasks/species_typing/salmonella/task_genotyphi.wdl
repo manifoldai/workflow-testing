@@ -7,7 +7,7 @@ task genotyphi {
     File? read2
     Boolean ont_data = false
     String samplename
-    String docker = "us-docker.pkg.dev/general-theiagen/staphb/mykrobe:0.11.0"
+    String docker = "manifoldai/mykrobe:0.11.0"
     Int disk_size = 100
     Int cpu = 4
     Int memory = 8
